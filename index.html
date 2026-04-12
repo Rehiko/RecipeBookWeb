@@ -23,22 +23,21 @@
     <button class="menu-close" id="menuClose" aria-label="Close menu">×</button>
 
     <div class="menu-panel-content">
-      <p class="menu-label">Navigation</p>
-      <a href="#scroll3d">Story Object</a>
-      <a href="#bookGallery">Book Preview</a>
-      <a href="#memorySection">Memory Notes</a>
-      <a href="#recipesSection">Recipes</a>
-      <a href="#purchase">Book Project</a>
+  <p class="menu-label">Navigation</p>
+  <a href="#cuisineSplit">Two Cuisines</a>
+  <a href="#interactiveRecipes">Interactive Recipes</a>
+  <a href="#scroll3d">Story Object</a>
+  <a href="#purchase">Book Project</a>
 
-      <div class="sound-control">
-        <span>Ambient Sound</span>
-        <button class="sound-toggle" id="soundToggle">Sound Off</button>
-      </div>
-    </div>
+  <div class="sound-control">
+    <span>Ambient Sound</span>
+    <button class="sound-toggle" id="soundToggle">Sound Off</button>
+  </div>
+</div>
   </div>
 
   <!-- AUDIO -->
-  <audio id="bgMusic" loop autoplay>
+  <audio id="bgMusic" loop>
     <source src="audio/mainmusic.mp3" type="audio/mpeg" />
   </audio>
 
@@ -52,9 +51,8 @@
       <button class="menu-btn" id="menuOpen">Menu</button>
 
       <div class="hero-actions">
-        <button>Book</button>
-        <button>Explore</button>
-      </div>
+  <a href="#purchase" class="hero-link-btn">Book</a>
+</div>
 
       <div class="hero-ornament hero-ornament-top"></div>
 
@@ -94,240 +92,138 @@
   </div>
 </section>
 
-<!-- INTERACTIVE RECIPE SECTION -->
 <section class="interactive-recipes" id="interactiveRecipes">
+
+<div class="scene-loader" id="sceneLoader">
+
+  <!-- Lanterns -->
+  <img src="images/lantern1.png" class="lantern lantern-1" alt="">
+  <img src="images/lantern2.png" class="lantern lantern-2" alt="">
+  <img src="images/lantern3.png" class="lantern lantern-3" alt="">
+  <img src="images/lantern4.png" class="lantern lantern-4" alt="">
+  <img src="images/lantern5.png" class="lantern lantern-5" alt="">
+
+  <!-- Sakura branches -->
+  <img src="images/sakura-left.png" class="sakura-branch sakura-left" alt="">
+  <img src="images/sakura-right.png" class="sakura-branch sakura-right" alt="">
+
+  <!-- Petals container -->
+  <div class="petals-layer" id="petalsLayer"></div>
+</div>
+
+
+
   <div class="section-heading reveal">
-    <p class="section-kicker">Interactive recipes</p>
-    <h2>Recipes with stories</h2>
-  </div>
-  <div class="interactive-layout">
-    <div class="recipe-sidebar reveal">
-      <button class="similar-dish-btn" id="similarDishBtn">Similar dish</button>
-      <div class="recipe-tabs" id="recipeTabs"></div>
+     <p class="section-kicker">Interactive recipes</p> 
+     <h2>Recipes with stories</h2> 
     </div>
+  <button class="interactive-arrow-btn" id="interactiveArrowBtn" aria-label="Open similar dish">
+  <img src="images/arrow-customized.png" alt="" class="interactive-arrow">
+</button>
+  <div class="interactive-layout">
 
-    <div class="recipe-story-card reveal">
-      <p class="recipe-detail-kicker meta-label" id="recipeCuisine">Ukrainian cuisine</p>
-      <h2 id="recipeTitle">Borscht</h2>
-      <p class="recipe-short" id="recipeShort">
-        Classic beet soup with layers of home, time, and family routine.
-      </p>
+    <div class="recipe-sidebar">
+  <button class="recipe-tab active" data-recipe="borscht">
+    <strong>Borscht</strong>
+  </button>
 
-      <div class="recipe-meta">
-        <div>
-          <span class="meta-label">Ingredients</span>
-          <p id="recipeIngredients">Beetroot Cabbage Potato Carrot Onion Broth</p>
-        </div>
-        <div>
-          <span class="meta-label">Memory note</span>
-          <p id="recipeMemory">
-            This dish feels like coming back home after a long journey.
-          </p>
-        </div>
+  <button class="recipe-tab" data-recipe="pampushky">
+    <strong>Pampushky</strong>
+  </button>
+
+  <button class="recipe-tab" data-recipe="varenyky">
+    <strong>Varenyky</strong>
+  </button>
+
+  <button class="recipe-tab" data-recipe="holubtsi">
+    <strong>Holubtsi</strong>
+  </button>
+  <button class="recipe-tab" data-recipe="hotpot"><strong>Hotpot</strong></button>
+  <button class="recipe-tab" data-recipe="baozi"><strong>Baozi</strong></button>
+  <button class="recipe-tab" data-recipe="dumplings"><strong>Dumplings</strong></button>
+  <button class="recipe-tab" data-recipe="springrolls"><strong>Spring Rolls</strong></button>
+</div>
+
+<div class="recipe-story-card">
+
+  <!-- 🔥 ОБГОРТКА ДЛЯ АНІМАЦІЇ -->
+  <div class="recipe-story-inner" id="recipeStoryInner">
+
+    <button class="similar-dish-btn" id="similarDishBtn">
+      Similar Dish
+    </button>
+
+    <p class="recipe-detail-kicker" id="recipeCuisine">
+      Ukrainian cuisine
+    </p>
+
+    <p id="recipeMainTitle">Borscht</p>
+
+    <p class="recipe-short" id="recipeShort">
+      Classic beet soup with layers of home, time, and family routine.
+    </p>
+
+    <div class="recipe-meta">
+      <div>
+        <span class="meta-label">Ingredients</span>
+        <p id="recipeIngredients">
+          Beetroot Cabbage Potato Carrot Onion Broth
+        </p>
       </div>
 
-      <button class="story-audio-btn" id="storyAudioBtn">
-        <span class="story-audio-icon">◉</span>
-        <span id="storyAudioText">Play story</span>
-      </button>
-
-      <audio id="storyAudio" preload="none">
-        <source id="storyAudioSource" src="audio/borshch.mp3" type="audio/mpeg" />
-      </audio>
+      <div>
+        <span class="meta-label">Memory note</span>
+        <p id="recipeMemory">
+          This dish feels like coming back home after a long journey.
+        </p>
+      </div>
     </div>
+
   </div>
-   <div class="center-image-wrap">
-  <img src="images/borshchuk.png" alt="" class="center-image quote">
-</div>
-  <div class="center-image-wrap">
-  <img src="images/quotes.png" alt="" class="center-image bowl">
+
+  <!-- 🔥 КНОПКА ЗАЛИШАЄТЬСЯ ЗОВНІ -->
+  <button class="play-btn" id="storyAudioBtn">
+    <img src="images/play-btn.png" alt="Play story">
+  </button>
+
+  <!-- 🔥 АУДІО -->
+  <audio id="storyAudio" preload="none">
+    <source id="storyAudioSource" src="audio/borshch.mp3" type="audio/mpeg" />
+  </audio>
+
 </div>
 
+<div class="center-image-wrap">
+  <img src="images/borshchuk.png" alt="Borscht" class="center-image bowl" id="recipeCenterImage">
+  <img src="images/quotes.png" alt="" class="center-image quote">
+</div>
+</div>
 </section>
 
 
-<!-- RECIPE UNIVERSE -->
-<section class="recipe-universe" id="recipeUniverse">
+    <!-- 3D STORY SECTION -->
+  <section class="scroll3d" id="scroll3d">
   <div class="section-heading reveal">
-    <p class="section-kicker">Recipe universe</p>
-    <h2>Ukrainian and Chinese dishes in conversation</h2>
+    <p class="section-kicker">Interactive Object</p>
+    <h2 class="scroll3d-title">A memory object in motion</h2>
     <p class="section-copy">
-      Explore recipes, feelings, and shared meanings. Some dishes connect through comfort, ritual, family, or the act of gathering around one table.
+      This section can later hold your real 3D model of a jug, plate, or recipe-book object.
+      For now it keeps the same scroll interaction, but in the same warm paper-and-red style.
     </p>
   </div>
 
-  <div class="recipe-universe-top reveal">
-    <button class="cuisine-switch active" data-cuisine="ukrainian">Ukrainian</button>
-    <button class="cuisine-switch" data-cuisine="chinese">Chinese</button>
-  </div>
+  <canvas id="c3d"></canvas>
 
-  <div class="recipe-universe-layout">
-    <aside class="recipe-list reveal" id="recipeList"></aside>
-
-    <article class="recipe-stage reveal">
-      <div class="recipe-stage-frame">
-        <p class="recipe-stage-kicker" id="recipeStageCuisine">Ukrainian cuisine</p>
-        <h3 class="recipe-stage-title" id="recipeStageTitle">Borscht</h3>
-        <p class="recipe-stage-desc" id="recipeStageDesc">
-          A warm dish of memory, patience, and home.
-        </p>
-
-        <div class="recipe-stage-grid">
-          <div class="recipe-stage-box">
-            <span class="meta-label">Ingredients</span>
-            <p id="recipeStageIngredients">Beetroot, cabbage, potato, carrot, onion, broth</p>
-          </div>
-
-          <div class="recipe-stage-box">
-            <span class="meta-label">Feeling</span>
-            <p id="recipeStageFeeling">Comfort, quiet warmth, family routine</p>
-          </div>
-        </div>
-
-        <div class="recipe-story-panel">
-          <span class="meta-label">Memory voice</span>
-          <p id="recipeStageStory">
-            This dish feels like coming back home and hearing familiar voices in the kitchen again.
-          </p>
-        </div>
-
-        <div class="recipe-links">
-          <span class="meta-label">Connected dish</span>
-          <button class="linked-dish-btn" id="linkedDishBtn">Hot Pot</button>
-        </div>
-      </div>
-    </article>
+  <div class="ingredient-overlay" id="ingredientOverlay">
+    <img src="images/ingredients/beetroot.png" class="ingredient ingredient-1" alt="">
+    <img src="images/ingredients/basil.png" class="ingredient ingredient-2" alt="">
+    <img src="images/ingredients/cabbage.png" class="ingredient ingredient-3" alt="">
+    <img src="images/ingredients/onion.png" class="ingredient ingredient-4" alt="">
+    <img src="images/ingredients/pepper.png" class="ingredient ingredient-5" alt="">
+    <img src="images/ingredients/potato.png" class="ingredient ingredient-6" alt="">
   </div>
 </section>
 
-    <!-- 3D STORY SECTION -->
-    <section class="scroll3d" id="scroll3d">
-      <div class="section-heading reveal">
-        <p class="section-kicker">Interactive Object</p>
-        <h2 class="scroll3d-title">A memory object in motion</h2>
-        <p class="section-copy">
-          This section can later hold your real 3D model of a jug, plate, or recipe-book object.
-          For now it keeps the same scroll interaction, but in the same warm paper-and-red style.
-        </p>
-      </div>
-      <canvas id="c3d"></canvas>
-    </section>
-
-    <!-- BOOK GALLERY -->
-    <section class="book-gallery" id="bookGallery">
-      <div class="section-heading reveal">
-        <p class="section-kicker">Book Preview</p>
-        <h2>Pages from the recipe book</h2>
-      </div>
-
-      <div class="gallery-grid">
-        <article class="gallery-card reveal">
-          <div class="gallery-image-wrap">
-            <img src="images/book-cover.png" alt="Book cover" />
-          </div>
-          <div class="gallery-meta">
-            <h3>Cover</h3>
-            <p>Culture through memories, food and personal stories.</p>
-          </div>
-        </article>
-
-        <article class="gallery-card reveal">
-          <div class="gallery-image-wrap">
-            <img src="images/china-intro.png" alt="Chinese introduction spread" />
-          </div>
-          <div class="gallery-meta">
-            <h3>Introduction</h3>
-            <p>Traditional symbols, cultural framing, and the story of cuisine.</p>
-          </div>
-        </article>
-
-        <article class="gallery-card reveal">
-          <div class="gallery-image-wrap">
-            <img src="images/jiaozi-spread.png" alt="Jiaozi recipe spread" />
-          </div>
-          <div class="gallery-meta">
-            <h3>Recipe Spread</h3>
-            <p>Recipe, memory note, and illustration merged into one visual page.</p>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- MEMORY NOTES -->
-    <section class="memory-section" id="memorySection">
-      <div class="section-heading reveal">
-        <p class="section-kicker">Cooking Memories</p>
-        <h2>Stories attached to recipes</h2>
-      </div>
-
-      <div class="memory-grid">
-        <article class="memory-card reveal">
-          <span class="memory-tag">01</span>
-          <h3>Family table</h3>
-          <p>
-            Food is not only about ingredients. It is about who cooked it, who waited,
-            who folded dumplings together, and who shared the meal.
-          </p>
-        </article>
-
-        <article class="memory-card reveal">
-          <span class="memory-tag">02</span>
-          <h3>Home abroad</h3>
-          <p>
-            Ukrainian and Chinese dishes become a way to keep home close, especially when
-            people live far from family and familiar traditions.
-          </p>
-        </article>
-
-        <article class="memory-card reveal">
-          <span class="memory-tag">03</span>
-          <h3>Everyday ritual</h3>
-          <p>
-            Recipes in this project are presented as small rituals of memory, comfort,
-            and shared cultural exchange.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <!-- RECIPES -->
-    <section class="recipes-preview" id="recipesSection">
-      <div class="section-heading reveal">
-        <p class="section-kicker">Recipes</p>
-        <h2>Explore dishes inside the book</h2>
-      </div>
-
-      <div class="recipes-grid">
-        <button class="recipe-card reveal is-active" data-recipe="0">
-          <h4>Jiaozi</h4>
-          <p>Chinese dumplings with memory note</p>
-        </button>
-
-        <button class="recipe-card reveal" data-recipe="1">
-          <h4>Borscht</h4>
-          <p>Classic Ukrainian home comfort</p>
-        </button>
-
-        <button class="recipe-card reveal" data-recipe="2">
-          <h4>Spring Rolls</h4>
-          <p>Shared table, shared texture</p>
-        </button>
-
-        <button class="recipe-card reveal" data-recipe="3">
-          <h4>Varenyky</h4>
-          <p>Tradition shaped by hand</p>
-        </button>
-      </div>
-
-      <div class="recipe-detail reveal" id="recipeDetail">
-        <p class="recipe-detail-kicker">Selected Recipe</p>
-        <h3 id="recipeTitle">Jiaozi</h3>
-        <p id="recipeText">
-          A family recipe shaped around the table. Folding dumplings becomes part of the memory,
-          not just the preparation. This section can later expand into ingredients, story, and visuals.
-        </p>
-      </div>
-    </section>
 
     <!-- PROJECT CTA -->
     <section class="purchase" id="purchase">
@@ -340,10 +236,54 @@
         </p>
 
         <div class="purchase-actions">
-          <button class="buy-btn">View Project</button>
-          <button class="secondary-btn">Open Book Preview</button>
+          <button class="secondary-btn" id="openBookPreview">Open Book Preview</button>
         </div>
       </div>
+      <section class="book-preview-section" id="bookPreviewSection">
+  <div class="book-preview-inner">
+    <div class="book-preview-head">
+      
+    </div>
+
+    <div class="flipbook" id="flipbook">
+    <div class="hard"><img src="images/book/hard-book-cover.png" alt="" /></div>
+    <div class="hard"></div>
+      <img src="images/book/page1.png" alt="" />
+    <div>
+      <img src="images/book/page2.png" alt="" />
+    </div>
+    <div>
+      <img src="images/book/page3.png" alt="" />
+    </div>
+    <div>
+      <img src="images/book/page4.png" alt="" />
+
+    </div>
+    <div>
+      <img src="images/book/page5.png" alt="" />
+
+    </div>
+    <div>
+      <img src="images/book/page5.png" alt="" />
+
+    </div>
+    <div>
+      <img src="images/book/page6.png" alt="" />
+
+    </div>
+    <div>
+      <img src="images/book/page7.png" alt="" />
+
+    </div>
+    <div>
+      <img src="images/book/page8.png" alt="" />
+
+    </div>
+    <div class="hard">Thank You <small>~ HankTheTank</small></div>
+  </div>
+    
+  </div>
+</section>
     </section>
 
     <!-- FOOTER -->
@@ -351,10 +291,28 @@
       <p>© Fork & Chopsticks — educational group project</p>
     </footer>
   </main>
-
+ <div class="global-book-scene" id="globalBookScene">
+  <img src="images/sakura-left.png" class="global-book-sakura global-book-sakura-left" alt="">
+  <img src="images/sakura-right.png" class="global-book-sakura global-book-sakura-right" alt="">
+  <div class="global-book-petals" id="globalBookPetals"></div>
+</div> 
+<audio id="pageFlipSound" preload="auto">
+  <source src="audio/page-flip.mp3" type="audio/mpeg" />
+</audio>
+  
   <img src="images/fly-drag.gif" class="dragon-gif" id="dragonGif" alt="dragon">
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/blasten/turn.js@master/lib/turn.min.js"></script>
   <script type="module" src="js/scroll3d.js"></script>
+  <script src="js/jquery.js"></script>
+  <script src="js/turn.js"></script>
+  <script>
+    $(".flipbook").turn();
+  </script>
 </body>
 </html>

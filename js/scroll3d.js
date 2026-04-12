@@ -2,9 +2,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
 
 gsap.registerPlugin(ScrollTrigger);
 
-// =========================
-// INTRO
-// =========================
+/* =========================
+   INTRO
+========================= */
 const intro = document.getElementById("intro");
 const introOverlay = document.querySelector(".intro-overlay");
 const introTitle = document.querySelector(".intro-title");
@@ -12,61 +12,52 @@ const introSub = document.querySelector(".intro-sub");
 const pageContent = document.getElementById("pageContent");
 const heroText = document.querySelector(".hero-text");
 
-const introTl = gsap.timeline({
-  defaults: { ease: "power3.out" },
-  onComplete: () => {
-    if (intro) intro.style.pointerEvents = "none";
-  }
-});
-
-introTl
-  .to(introOverlay, {
-    opacity: 0.35,
-    duration: 1.6
-  }, 0)
-  .to(introSub, {
-    opacity: 1,
-    y: 0,
-    duration: 0.8
-  }, 0.45)
-  .to(introTitle, {
-    opacity: 1,
-    y: 0,
-    duration: 1
-  }, 0.65)
-  .to({}, { duration: 0.45 })
-  .to(introSub, {
-    opacity: 0,
-    y: -10,
-    duration: 0.45
-  }, "+=0.05")
-  .to(intro, {
-    opacity: 0,
-    duration: 0.9,
-    onStart: () => {
-      gsap.to(pageContent, {
-        opacity: 1,
-        duration: 0.9,
-        ease: "power2.out"
-      });
-
-      gsap.to(heroText, {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        delay: 0.15,
-        ease: "power3.out"
-      });
-    },
+if (intro && introOverlay && introTitle && introSub && pageContent && heroText) {
+  const introTl = gsap.timeline({
+    defaults: { ease: "power3.out" },
     onComplete: () => {
-      if (intro) intro.style.display = "none";
-      ScrollTrigger.refresh();
+      intro.style.pointerEvents = "none";
     }
-  }, "-=0.05");
+  });
 
-// =========================
-// REVEAL ON SCROLL
-// =========================
+  introTl
+    .to(introOverlay, { opacity: 0.35, duration: 1.6 }, 0)
+    .to(introSub, { opacity: 1, y: 0, duration: 0.8 }, 0.45)
+    .to(introTitle, { opacity: 1, y: 0, duration: 1 }, 0.65)
+    .to({}, { duration: 0.45 })
+    .to(introSub, { opacity: 0, y: -10, duration: 0.45 }, "+=0.05")
+    .to(
+      intro,
+      {
+        opacity: 0,
+        duration: 0.9,
+        onStart: () => {
+          gsap.to(pageContent, {
+            opacity: 1,
+            duration: 0.9,
+            ease: "power2.out"
+          });
+
+          gsap.to(heroText, {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            delay: 0.15,
+            ease: "power3.out"
+          });
+        },
+        onComplete: () => {
+          intro.style.display = "none";
+          ScrollTrigger.refresh();
+        }
+      },
+      "-=0.05"
+    );
+}
+
+/* =========================
+   REVEAL ON SCROLL
+========================= */
 gsap.utils.toArray(".reveal").forEach((item) => {
   gsap.to(item, {
     opacity: 1,
@@ -81,13 +72,15 @@ gsap.utils.toArray(".reveal").forEach((item) => {
   });
 });
 
-// =========================
-// THREE.JS
-// =========================
-const section = document.getElementById("scroll3d");
+/* =========================
+   THREE.JS
+========================= */
+const section3D = document.getElementById("scroll3d");
 const canvas = document.getElementById("c3d");
+const ingredientOverlay = document.getElementById("ingredientOverlay");
+const ingredientEls = document.querySelectorAll(".ingredient");
 
-if (section && canvas) {
+if (section3D && canvas) {
   const renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: true,
@@ -105,34 +98,61 @@ if (section && canvas) {
     0.1,
     100
   );
-  camera.position.set(0, 0, 6.3);
+  camera.position.set(0, 0.2, 7.2);
 
-  const ambient = new THREE.AmbientLight(0xffffff, 1.25);
+  const ambient = new THREE.AmbientLight(0xffffff, 1.3);
   scene.add(ambient);
 
-  const dir1 = new THREE.DirectionalLight(0xfff2df, 1.3);
+  const dir1 = new THREE.DirectionalLight(0xfff2df, 1.5);
   dir1.position.set(4, 6, 5);
   scene.add(dir1);
 
-  const dir2 = new THREE.DirectionalLight(0xc95050, 0.5);
+  const dir2 = new THREE.DirectionalLight(0xc95050, 0.55);
   dir2.position.set(-4, 2, 3);
   scene.add(dir2);
 
-  // book-like block instead of dark cube
-  const geometry = new THREE.BoxGeometry(2.2, 3, 0.55);
-  const materials = [
-    new THREE.MeshStandardMaterial({ color: "#b33535", roughness: 0.75 }),
-    new THREE.MeshStandardMaterial({ color: "#b33535", roughness: 0.75 }),
-    new THREE.MeshStandardMaterial({ color: "#efe2cf", roughness: 0.82 }),
-    new THREE.MeshStandardMaterial({ color: "#d6c2aa", roughness: 0.9 }),
-    new THREE.MeshStandardMaterial({ color: "#efe2cf", roughness: 0.78 }),
-    new THREE.MeshStandardMaterial({ color: "#efe2cf", roughness: 0.78 })
-  ];
+  /* POT GROUP */
+  const potGroup = new THREE.Group();
+  scene.add(potGroup);
 
-  const book = new THREE.Mesh(geometry, materials);
-  scene.add(book);
+  const potGeometry = new THREE.CylinderGeometry(1.3, 1.65, 1.5, 64, 1, true);
+  const potMaterial = new THREE.MeshStandardMaterial({
+    color: "#8f2f2f",
+    roughness: 0.72,
+    metalness: 0.06,
+    side: THREE.DoubleSide
+  });
 
-  function resize() {
+  const pot = new THREE.Mesh(potGeometry, potMaterial);
+  potGroup.add(pot);
+
+  const bottomGeometry = new THREE.CircleGeometry(1.3, 64);
+  const bottomMaterial = new THREE.MeshStandardMaterial({
+    color: "#632020",
+    roughness: 0.84
+  });
+
+  const potBottom = new THREE.Mesh(bottomGeometry, bottomMaterial);
+  potBottom.rotation.x = -Math.PI / 2;
+  potBottom.position.y = -0.75;
+  potGroup.add(potBottom);
+
+  const rimGeometry = new THREE.TorusGeometry(1.3, 0.05, 18, 80);
+  const rimMaterial = new THREE.MeshStandardMaterial({
+    color: "#d9b37a",
+    roughness: 0.45,
+    metalness: 0.15
+  });
+
+  const rim = new THREE.Mesh(rimGeometry, rimMaterial);
+  rim.rotation.x = Math.PI / 2;
+  rim.position.y = 0.75;
+  potGroup.add(rim);
+
+  /* INGREDIENTS */
+  
+
+  function resizeRenderer() {
     const w = window.innerWidth;
     const h = window.innerHeight;
     renderer.setSize(w, h, false);
@@ -140,48 +160,142 @@ if (section && canvas) {
     camera.updateProjectionMatrix();
   }
 
-  window.addEventListener("resize", resize);
-  resize();
+  window.addEventListener("resize", resizeRenderer);
+  resizeRenderer();
 
   function tick() {
+    potGroup.rotation.y += 0.003;
     renderer.render(scene, camera);
     requestAnimationFrame(tick);
   }
+
   tick();
 
-  gsap.to(book.rotation, {
-    y: Math.PI * 2.2,
-    x: Math.PI * 0.16,
-    ease: "none",
+  /* MAIN SCROLL ANIMATION */
+  const potTl = gsap.timeline({
     scrollTrigger: {
-      trigger: section,
+      trigger: section3D,
       start: "top top",
       end: "bottom bottom",
-      scrub: true
+      scrub: 1.2
     }
   });
 
-  gsap.to(book.position, {
-    y: -0.35,
-    z: -0.5,
-    ease: "none",
-    scrollTrigger: {
-      trigger: section,
-      start: "top top",
-      end: "bottom bottom",
-      scrub: true
-    }
-  });
+  potTl
+    .to(potGroup.rotation, {
+      y: Math.PI * 1.4,
+      x: Math.PI * 0.08,
+      duration: 1
+    })
+    .to(potGroup.position, {
+      y: -0.12,
+      duration: 1
+    }, 0)
+    .to(camera.position, {
+      z: 6,
+      duration: 0.8
+    }, 0.15)
+    .to(camera.position, {
+      z: 5.2,
+      duration: 0.8
+    }, 0.75);
+
+/* INGREDIENT DROP */
+ScrollTrigger.create({
+  trigger: section3D,
+  start: "top 35%",
+  once: true,
+  onEnter: () => {
+    console.log("ingredient animation started", ingredientEls.length);
+
+    gsap.set(ingredientEls, {
+      x: 0,
+      y: 0,
+      opacity: 0,
+      scale: 0.9,
+      rotation: 0
+    });
+
+    const tl = gsap.timeline();
+
+    tl.to(".ingredient-1", {
+      x: window.innerWidth * 0.42,
+      y: window.innerHeight * 0.42,
+      opacity: 1,
+      rotation: 140,
+      scale: 1,
+      duration: 1.2,
+      ease: "power2.inOut"
+    }, 0);
+
+    tl.to(".ingredient-2", {
+      x: -window.innerWidth * 0.38,
+      y: window.innerHeight * 0.38,
+      opacity: 1,
+      rotation: -130,
+      scale: 1,
+      duration: 1.2,
+      ease: "power2.inOut"
+    }, 0.08);
+
+    tl.to(".ingredient-3", {
+      x: window.innerWidth * 0.45,
+      y: window.innerHeight * 0.18,
+      opacity: 1,
+      rotation: 110,
+      scale: 1,
+      duration: 1.25,
+      ease: "power2.inOut"
+    }, 0.16);
+
+    tl.to(".ingredient-4", {
+      x: -window.innerWidth * 0.42,
+      y: window.innerHeight * 0.18,
+      opacity: 1,
+      rotation: -100,
+      scale: 1,
+      duration: 1.25,
+      ease: "power2.inOut"
+    }, 0.24);
+
+    tl.to(".ingredient-5", {
+      x: window.innerWidth * 0.44,
+      y: -window.innerHeight * 0.10,
+      opacity: 1,
+      rotation: 150,
+      scale: 1,
+      duration: 1.15,
+      ease: "power2.inOut"
+    }, 0.32);
+
+    tl.to(".ingredient-6", {
+      x: -window.innerWidth * 0.40,
+      y: -window.innerHeight * 0.14,
+      opacity: 1,
+      rotation: -150,
+      scale: 1,
+      duration: 1.15,
+      ease: "power2.inOut"
+    }, 0.40);
+
+    tl.to(ingredientEls, {
+      opacity: 0,
+      scale: 0.2,
+      duration: 0.35,
+      stagger: 0.03,
+      ease: "power2.out"
+    }, 1.15);
+  }
+});
 }
-
-// =========================
-// RECIPE INTERACTION
-// =========================
+/* =========================
+   RECIPES PREVIEW SECTION
+========================= */
 const recipeCards = document.querySelectorAll(".recipe-card");
-const recipeTitle = document.getElementById("recipeTitle");
-const recipeText = document.getElementById("recipeText");
+const previewRecipeTitle = document.getElementById("previewRecipeTitle");
+const previewRecipeText = document.getElementById("previewRecipeText");
 
-const recipeData = [
+const previewRecipeData = [
   {
     title: "Jiaozi",
     text: "A family recipe shaped around the table. Folding dumplings becomes part of the memory, not just the preparation. This section can later expand into ingredients, story, and visuals."
@@ -207,16 +321,16 @@ recipeCards.forEach((card) => {
     recipeCards.forEach((item) => item.classList.remove("is-active"));
     card.classList.add("is-active");
 
-    if (recipeTitle && recipeText && recipeData[index]) {
-      recipeTitle.textContent = recipeData[index].title;
-      recipeText.textContent = recipeData[index].text;
+    if (previewRecipeTitle && previewRecipeText && previewRecipeData[index]) {
+      previewRecipeTitle.textContent = previewRecipeData[index].title;
+      previewRecipeText.textContent = previewRecipeData[index].text;
     }
   });
 });
 
-// =========================
-// MENU
-// =========================
+/* =========================
+   MENU
+========================= */
 const menuOpen = document.getElementById("menuOpen");
 const menuPanel = document.getElementById("menuPanel");
 const menuClose = document.getElementById("menuClose");
@@ -233,6 +347,12 @@ if (menuClose && menuPanel) {
   });
 }
 
+document.querySelectorAll("#menuPanel a").forEach((link) => {
+  link.addEventListener("click", () => {
+    menuPanel.classList.remove("active");
+  });
+});
+
 document.addEventListener("click", (e) => {
   if (
     menuPanel &&
@@ -245,12 +365,13 @@ document.addEventListener("click", (e) => {
   }
 });
 
-// =========================
-// SOUND
-// =========================
+/* =========================
+   SOUND
+========================= */
 const soundToggle = document.getElementById("soundToggle");
 const soundToggleFloat = document.getElementById("soundToggleFloat");
 const bgMusic = document.getElementById("bgMusic");
+const pageFlipSound = document.getElementById("pageFlipSound");
 
 function updateSoundButtons(isPlaying) {
   if (soundToggle) {
@@ -263,31 +384,43 @@ function updateSoundButtons(isPlaying) {
 
 if (bgMusic) {
   bgMusic.volume = 0.35;
+  updateSoundButtons(false);
+}
 
-  window.addEventListener("load", async () => {
-    try {
+async function startMusicOnce() {
+  if (!bgMusic) return;
+
+  try {
+    if (bgMusic.paused) {
       await bgMusic.play();
       updateSoundButtons(true);
-    } catch (error) {
-      updateSoundButtons(false);
-      console.log("Autoplay blocked:", error);
     }
-  });
+  } catch (error) {
+    console.log("Autoplay blocked:", error);
+  }
+
+  document.removeEventListener("click", startMusicOnce);
+  document.removeEventListener("touchstart", startMusicOnce);
+  document.removeEventListener("keydown", startMusicOnce);
 }
+
+document.addEventListener("click", startMusicOnce, { once: true });
+document.addEventListener("touchstart", startMusicOnce, { once: true });
+document.addEventListener("keydown", startMusicOnce, { once: true });
 
 async function toggleMusic() {
   if (!bgMusic) return;
 
-  if (bgMusic.paused) {
-    try {
+  try {
+    if (bgMusic.paused) {
       await bgMusic.play();
       updateSoundButtons(true);
-    } catch (error) {
-      console.log("Audio blocked:", error);
+    } else {
+      bgMusic.pause();
+      updateSoundButtons(false);
     }
-  } else {
-    bgMusic.pause();
-    updateSoundButtons(false);
+  } catch (error) {
+    console.log("Audio toggle blocked:", error);
   }
 }
 
@@ -299,13 +432,284 @@ if (soundToggleFloat) {
   soundToggleFloat.addEventListener("click", toggleMusic);
 }
 
+function playPageFlipSound() {
+  if (!pageFlipSound) return;
 
-// =========================
-// RECIPE UNIVERSE
-// =========================
+  try {
+    pageFlipSound.pause();
+    pageFlipSound.currentTime = 0;
+    pageFlipSound.play();
+  } catch (error) {
+    console.log("Page flip sound error:", error);
+  }
+}
+
+/* =========================
+   INTERACTIVE RECIPES
+========================= */
+const interactiveRecipeData = {
+  borscht: {
+    cuisine: "Ukrainian cuisine",
+    title: "Borscht",
+    short: "Classic beet soup with layers of home, time, and family routine.",
+    ingredients: "Beetroot, Cabbage, Potato, Carrot, Onion, Broth",
+    memory: "This dish feels like coming back home after a long journey.",
+    audio: "audio/borshch.mp3",
+    image: "images/borshchuk.png",
+    similarTo: "hotpot"
+  },
+  pampushky: {
+    cuisine: "Ukrainian cuisine",
+    title: "Pampushky",
+    short: "Soft garlic buns served warm, bringing comfort and the feeling of a shared family table.",
+    ingredients: "Flour, Yeast, Milk, Garlic, Oil, Salt",
+    memory: "Pampushky feel like warm kitchen air and bread taken straight from the oven.",
+    audio: "audio/pampushku_Audio_mixdown.mp3",
+    image: "images/pampushky.png",
+    similarTo: "baozi"
+  },
+  varenyky: {
+    cuisine: "Ukrainian cuisine",
+    title: "Varenyky",
+    short: "Filled dumplings shaped by hand, carrying everyday tradition and home ritual.",
+    ingredients: "Flour, Egg, Water, Potato, Cheese, Onion",
+    memory: "Varenyky feel like many hands working together around one table.",
+    audio: "audio/Varenuku_audio_mixdown.mp3",
+    image: "images/varenyky.png",
+    similarTo: "dumplings"
+  },
+  holubtsi: {
+    cuisine: "Ukrainian cuisine",
+    title: "Holubtsi",
+    short: "Stuffed cabbage rolls cooked slowly for family gatherings and special meals.",
+    ingredients: "Cabbage, Rice, Meat, Onion, Carrot, Tomato",
+    memory: "Holubtsi feel like care, patience, and recipes passed between generations.",
+    audio: "audio/Holubzi_audio_mixdown.mp3",
+    image: "images/holubtsi.png",
+    similarTo: "springrolls"
+  },
+  hotpot: {
+    cuisine: "Chinese cuisine",
+    title: "Hotpot",
+    short: "A shared dish where ingredients cook at the table and conversation lasts for hours.",
+    ingredients: "Broth, Beef, Mushrooms, Cabbage, Tofu, Noodles",
+    memory: "Hotpot feels like gathering close, sharing warmth, and eating without rushing.",
+    audio: "audio/hot_pot_audio_mixdown.mp3",
+    image: "images/hotpot.png",
+    similarTo: "borscht"
+  },
+  baozi: {
+    cuisine: "Chinese cuisine",
+    title: "Baozi",
+    short: "Soft steamed buns filled with comfort, warmth, and familiar everyday flavour.",
+    ingredients: "Flour, Yeast, Pork, Soy, Ginger, Garlic",
+    memory: "Baozi feel like a warm morning and food made with care.",
+    audio: "audio/baozi_audio_mixdown.mp3",
+    image: "images/baozi.png",
+    similarTo: "pampushky"
+  },
+  dumplings: {
+    cuisine: "Chinese cuisine",
+    title: "Jiaozi",
+    short: "Folded by hand, these dumplings connect family ritual, patience, and celebration.",
+    ingredients: "Wrappers, Pork, Cabbage, Chives, Ginger, Soy",
+    memory: "Jiaozi feel like festive gatherings and many careful hands cooking together.",
+    audio: "audio/jiaozi_audio_mixdown.mp3",
+    image: "images/dumplings.png",
+    similarTo: "varenyky"
+  },
+  springrolls: {
+    cuisine: "Chinese cuisine",
+    title: "Spring Rolls",
+    short: "Rolled, crisp, and made for sharing, often part of festive meals and celebrations.",
+    ingredients: "Wrappers, Cabbage, Carrot, Mushrooms, Noodles, Soy",
+    memory: "Spring rolls feel lively, celebratory, and full of movement around the table.",
+    audio: "audio/springRolls_audio_mixdown.mp3",
+    image: "images/springrolls.png",
+    similarTo: "holubtsi"
+  }
+};
+
+const recipeKeys = Object.keys(interactiveRecipeData);
+let currentInteractiveRecipeKey = "borscht";
+let currentIndex = recipeKeys.indexOf(currentInteractiveRecipeKey);
+
+const recipeCuisine = document.getElementById("recipeCuisine");
+const recipeMainTitle = document.getElementById("recipeMainTitle");
+const recipeShort = document.getElementById("recipeShort");
+const recipeIngredients = document.getElementById("recipeIngredients");
+const recipeMemory = document.getElementById("recipeMemory");
+const similarDishBtn = document.getElementById("similarDishBtn");
+const recipeCenterImage = document.getElementById("recipeCenterImage");
+const storyAudioBtn = document.getElementById("storyAudioBtn");
+const storyAudioText = document.getElementById("storyAudioText");
+const storyAudio = document.getElementById("storyAudio");
+const storyAudioSource = document.getElementById("storyAudioSource");
+const recipeTabs = document.querySelectorAll(".recipe-tab");
+const recipeStoryCard = document.querySelector(".recipe-story-card");
+const interactiveArrowBtn = document.getElementById("interactiveArrowBtn");
+
+function resetStoryAudioUI() {
+  if (storyAudioBtn) storyAudioBtn.classList.remove("is-playing");
+  if (storyAudioText) storyAudioText.textContent = "Play story";
+}
+
+function formatIngredients(text) {
+  return text
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .join("<br>");
+}
+
+function renderInteractiveRecipe(recipeKey) {
+  const recipe = interactiveRecipeData[recipeKey];
+  if (!recipe) return;
+
+  currentInteractiveRecipeKey = recipeKey;
+  currentIndex = recipeKeys.indexOf(recipeKey);
+
+  if (recipeCuisine) recipeCuisine.textContent = recipe.cuisine;
+  if (recipeMainTitle) recipeMainTitle.textContent = recipe.title;
+  if (recipeShort) recipeShort.textContent = recipe.short;
+  if (recipeIngredients) recipeIngredients.innerHTML = formatIngredients(recipe.ingredients);
+  if (recipeMemory) recipeMemory.textContent = recipe.memory;
+
+  if (similarDishBtn && recipe.similarTo && interactiveRecipeData[recipe.similarTo]) {
+    similarDishBtn.textContent = `Similar dish: ${interactiveRecipeData[recipe.similarTo].title}`;
+  }
+
+  if (storyAudio && storyAudioSource) {
+    storyAudio.pause();
+    storyAudio.currentTime = 0;
+    storyAudioSource.src = recipe.audio;
+    storyAudio.load();
+    resetStoryAudioUI();
+  }
+
+  if (recipeCenterImage) {
+    recipeCenterImage.src = recipe.image;
+    recipeCenterImage.alt = recipe.title;
+  }
+
+  recipeTabs.forEach((tab) => {
+    tab.classList.toggle("active", tab.dataset.recipe === recipeKey);
+  });
+}
+
+function animateRecipeChange(nextKey, direction = 1) {
+  if (!recipeStoryCard) {
+    renderInteractiveRecipe(nextKey);
+    return;
+  }
+
+  const rotateOut = direction > 0 ? -75 : 75;
+  const rotateIn = direction > 0 ? 75 : -75;
+
+  recipeStoryCard.classList.add("is-flipping");
+
+  gsap.timeline({
+    onComplete: () => {
+      recipeStoryCard.classList.remove("is-flipping");
+    }
+  })
+    .to(recipeStoryCard, {
+      duration: 0.28,
+      rotateY: rotateOut,
+      x: direction > 0 ? -10 : 10,
+      scale: 0.985,
+      opacity: 0.78,
+      ease: "power2.in"
+    })
+    .add(() => {
+      renderInteractiveRecipe(nextKey);
+    })
+    .set(recipeStoryCard, {
+      rotateY: rotateIn,
+      x: direction > 0 ? 10 : -10
+    })
+    .to(recipeStoryCard, {
+      duration: 0.42,
+      rotateY: 0,
+      x: 0,
+      scale: 1,
+      opacity: 1,
+      ease: "power3.out"
+    });
+}
+
+recipeTabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    const nextKey = tab.dataset.recipe;
+    const nextIndex = recipeKeys.indexOf(nextKey);
+    const direction = nextIndex > currentIndex ? 1 : -1;
+
+    playPageFlipSound();
+    animateRecipeChange(nextKey, direction);
+  });
+});
+
+if (interactiveArrowBtn) {
+  interactiveArrowBtn.addEventListener("click", () => {
+    let nextIndex = currentIndex + 1;
+    if (nextIndex >= recipeKeys.length) nextIndex = 0;
+
+    const nextKey = recipeKeys[nextIndex];
+
+    playPageFlipSound();
+    playFullSceneAnimation();
+
+    setTimeout(() => {
+      animateRecipeChange(nextKey, 1);
+    }, 260);
+  });
+}
+
+if (similarDishBtn) {
+  similarDishBtn.addEventListener("click", () => {
+    const currentRecipe = interactiveRecipeData[currentInteractiveRecipeKey];
+    if (!currentRecipe || !currentRecipe.similarTo) return;
+
+    const nextKey = currentRecipe.similarTo;
+    const nextIndex = recipeKeys.indexOf(nextKey);
+    const direction = nextIndex > currentIndex ? 1 : -1;
+
+    playPageFlipSound();
+    animateRecipeChange(nextKey, direction);
+  });
+}
+
+if (storyAudioBtn && storyAudio) {
+  storyAudioBtn.addEventListener("click", async () => {
+    try {
+      if (storyAudio.paused) {
+        await storyAudio.play();
+        storyAudioBtn.classList.add("is-playing");
+        if (storyAudioText) storyAudioText.textContent = "Pause story";
+      } else {
+        storyAudio.pause();
+        storyAudioBtn.classList.remove("is-playing");
+        if (storyAudioText) storyAudioText.textContent = "Play story";
+      }
+    } catch (error) {
+      console.log("Story audio error:", error);
+    }
+  });
+
+  storyAudio.addEventListener("ended", resetStoryAudioUI);
+  storyAudio.addEventListener("error", () => {
+    console.log("Story audio failed to load");
+    resetStoryAudioUI();
+  });
+}
+
+renderInteractiveRecipe(currentInteractiveRecipeKey);
+
+/* =========================
+   RECIPE UNIVERSE
+========================= */
 const cuisineSwitches = document.querySelectorAll(".cuisine-switch");
 const recipeList = document.getElementById("recipeList");
-
 const recipeStageCuisine = document.getElementById("recipeStageCuisine");
 const recipeStageTitle = document.getElementById("recipeStageTitle");
 const recipeStageDesc = document.getElementById("recipeStageDesc");
@@ -413,7 +817,7 @@ let currentCuisineUniverse = "ukrainian";
 let currentRecipeUniverse = 0;
 
 function updateRecipeStage(cuisineKey, recipeIndex) {
-  const item = recipeUniverseData[cuisineKey][recipeIndex];
+  const item = recipeUniverseData[cuisineKey]?.[recipeIndex];
   if (!item) return;
 
   if (recipeStageCuisine) {
@@ -439,11 +843,12 @@ function updateRecipeStage(cuisineKey, recipeIndex) {
 
 function renderRecipeList(cuisineKey) {
   if (!recipeList) return;
+
   recipeList.innerHTML = "";
 
   recipeUniverseData[cuisineKey].forEach((item, index) => {
     const btn = document.createElement("button");
-    btn.className = `recipe-item ${index === 0 ? "active" : ""}`;
+    btn.className = `recipe-item ${index === currentRecipeUniverse ? "active" : ""}`;
     btn.innerHTML = `
       <strong>${item.title}</strong>
       <span>${item.short}</span>
@@ -451,7 +856,7 @@ function renderRecipeList(cuisineKey) {
 
     btn.addEventListener("click", () => {
       currentRecipeUniverse = index;
-      document.querySelectorAll(".recipe-item").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".recipe-item").forEach((el) => el.classList.remove("active"));
       btn.classList.add("active");
       updateRecipeStage(cuisineKey, index);
     });
@@ -462,7 +867,7 @@ function renderRecipeList(cuisineKey) {
 
 cuisineSwitches.forEach((btn) => {
   btn.addEventListener("click", () => {
-    cuisineSwitches.forEach(el => el.classList.remove("active"));
+    cuisineSwitches.forEach((el) => el.classList.remove("active"));
     btn.classList.add("active");
 
     currentCuisineUniverse = btn.dataset.cuisine;
@@ -479,13 +884,13 @@ if (linkedDishBtn) {
     if (!targetId) return;
 
     const otherCuisine = currentCuisineUniverse === "ukrainian" ? "chinese" : "ukrainian";
-    const targetIndex = recipeUniverseData[otherCuisine].findIndex(item => item.id === targetId);
+    const targetIndex = recipeUniverseData[otherCuisine].findIndex((item) => item.id === targetId);
 
     if (targetIndex !== -1) {
       currentCuisineUniverse = otherCuisine;
       currentRecipeUniverse = targetIndex;
 
-      cuisineSwitches.forEach(el => {
+      cuisineSwitches.forEach((el) => {
         el.classList.toggle("active", el.dataset.cuisine === otherCuisine);
       });
 
@@ -508,92 +913,303 @@ if (linkedDishBtn) {
 renderRecipeList(currentCuisineUniverse);
 updateRecipeStage(currentCuisineUniverse, currentRecipeUniverse);
 
-// =========================
-// STORY AUDIO FIX
-// =========================
-const storyBtn = document.getElementById("storyAudioBtn");
-const storyAudioEl = document.getElementById("storyAudio");
-const storyText = document.getElementById("storyAudioText");
-
-if (storyBtn && storyAudioEl) {
-  storyBtn.addEventListener("click", async () => {
-    try {
-      if (storyAudioEl.paused) {
-        await storyAudioEl.play();
-        storyBtn.classList.add("is-playing");
-        if (storyText) storyText.textContent = "Pause story";
-      } else {
-        storyAudioEl.pause();
-        storyBtn.classList.remove("is-playing");
-        if (storyText) storyText.textContent = "Play story";
-      }
-    } catch (e) {
-      console.log("Audio error:", e);
-    }
-  });
-
-  // reset when audio ends
-  storyAudioEl.addEventListener("ended", () => {
-    storyBtn.classList.remove("is-playing");
-    if (storyText) storyText.textContent = "Play story";
-  });
-}
-
-
-// =========================
-// DRAGON WITH SMART DIRECTION
-// =========================
+/* =========================
+   DRAGON
+========================= */
 const dragon = document.getElementById("dragonGif");
 const dragonSection = document.getElementById("interactiveRecipes");
+const textBlock = document.querySelector(".recipe-story-card");
 
 if (dragon && dragonSection) {
   gsap.set(dragon, {
     x: -250,
+    y: 0,
     opacity: 0,
-    scaleX: 1, // летить вправо
+    scaleX: -1,
     rotation: 0
   });
 
   gsap.timeline({
     scrollTrigger: {
       trigger: dragonSection,
-      start: "top 50%",
+      start: "top 75%",
       end: "bottom top",
-      scrub: 1.2,
+      scrub: 1,
+      invalidateOnRefresh: true,
       onUpdate: (self) => {
-        // direction: 1 = вниз, -1 = вгору
-        if (self.direction === 1) {
-          gsap.to(dragon, {
-            scaleX: -1,
-            duration: 0.25,
-            ease: "power2.out"
-          });
-        } else {
-          gsap.to(dragon, {
-            scaleX: 1,
-            duration: 0.25,
-            ease: "power2.out"
-          });
-        }
+        gsap.to(dragon, {
+          scaleX: self.direction === 1 ? -1 : 1,
+          duration: 0.2,
+          ease: "power2.out",
+          overwrite: "auto"
+        });
       }
     }
   })
-  .to(dragon, {
-    opacity: 1,
-    x: window.innerWidth * 0.25,
-    ease: "none"
-  })
-  .to(dragon, {
-    x: window.innerWidth * 0.55,
-    ease: "none"
-  })
-  .to(dragon, {
-    x: window.innerWidth * 0.85,
-    ease: "none"
-  })
-  .to(dragon, {
-    x: window.innerWidth + 250,
-    opacity: 0,
-    ease: "none"
+    .to(dragon, {
+      opacity: 1,
+      x: window.innerWidth * 0.22,
+      ease: "none"
+    })
+    .to(dragon, {
+      x: window.innerWidth * 0.52,
+      ease: "none"
+    })
+    .to(dragon, {
+      x: window.innerWidth * 0.82,
+      ease: "none"
+    })
+    .to(dragon, {
+      x: window.innerWidth + 250,
+      opacity: 0,
+      ease: "none"
+    });
+}
+
+if (dragon && textBlock) {
+  gsap.to(dragon, {
+    opacity: 0.28,
+    ease: "none",
+    scrollTrigger: {
+      trigger: textBlock,
+      start: "top 78%",
+      end: "bottom 25%",
+      scrub: true
+    }
   });
+}
+
+/* =========================
+   LANTERNS + SAKURA FOR RECIPES
+========================= */
+const lanterns = document.querySelectorAll(".lantern");
+const sakuraLeft = document.querySelector(".sakura-left");
+const sakuraRight = document.querySelector(".sakura-right");
+const petalsLayer = document.getElementById("petalsLayer");
+
+const petalImages = [
+  "images/petals/petal1.png",
+  "images/petals/petal2.png",
+  "images/petals/petal3.png",
+  "images/petals/petal4.png",
+  "images/petals/petal5.png",
+  "images/petals/petal6.png",
+  "images/petals/petal7.png",
+  "images/petals/petal8.png",
+  "images/petals/petal9.png",
+  "images/petals/petal10.png",
+  "images/petals/petal11.png"
+];
+
+function createPetal() {
+  if (!petalsLayer) return;
+
+  const petal = document.createElement("img");
+  petal.className = "petal";
+  petal.src = petalImages[Math.floor(Math.random() * petalImages.length)];
+
+  const startX = Math.random() * window.innerWidth;
+  const drift = gsap.utils.random(-120, 120);
+  const rotate = gsap.utils.random(-180, 180);
+  const duration = gsap.utils.random(5, 9);
+
+  petalsLayer.appendChild(petal);
+
+  gsap.set(petal, {
+    x: startX,
+    y: -40,
+    opacity: 1,
+    scale: gsap.utils.random(1.2, 2.2),
+    rotation: gsap.utils.random(-20, 20)
+  });
+
+  gsap.to(petal, {
+    y: window.innerHeight + 300,
+    x: startX + drift,
+    rotation: rotate,
+    duration: duration,
+    ease: "none",
+    onComplete: () => petal.remove()
+  });
+
+  gsap.to(petal, {
+    x: `+=${gsap.utils.random(-60, 60)}`,
+    repeat: -1,
+    yoyo: true,
+    duration: gsap.utils.random(1, 2),
+    ease: "sine.inOut"
+  });
+}
+
+function startPetalRain() {
+  for (let i = 0; i < 45; i++) {
+    setTimeout(() => {
+      createPetal();
+    }, i * 120);
+  }
+}
+
+function playFullSceneAnimation() {
+  if (!lanterns.length) return;
+
+  const tl = gsap.timeline();
+
+  gsap.killTweensOf(lanterns);
+
+  gsap.set(lanterns, {
+    y: -260,
+    opacity: 0,
+    rotate: 0
+  });
+
+  tl.to(lanterns, {
+    y: 520,
+    opacity: 1,
+    duration: 0.9,
+    stagger: 0.12,
+    ease: "power3.out",
+    onStart: () => startPetalRain()
+  });
+
+  tl.to(lanterns, {
+    y: -300,
+    opacity: 0,
+    duration: 0.7,
+    stagger: 0.1,
+    ease: "power2.in"
+  }, "+=0.4");
+}
+
+/* =========================
+   BOOK PREVIEW + BOOK SAKURA
+========================= */
+const openBookPreviewBtn = document.getElementById("openBookPreview");
+const bookPreviewSection = document.getElementById("bookPreviewSection");
+const bookSakuraLeft = document.querySelector(".global-book-sakura-left");
+const bookSakuraRight = document.querySelector(".global-book-sakura-right");
+const bookPetalsLayer = document.getElementById("globalBookPetals");
+
+let flipbookReady = false;
+
+function initFlipbook() {
+  if (flipbookReady) return;
+  if (typeof window.$ === "undefined") return;
+  if (!window.$("#flipbook").length) return;
+  if (typeof window.$.fn.turn !== "function") return;
+  flipbookReady = true;
+}
+
+function createBookPetal() {
+  if (!bookPetalsLayer) return;
+
+  const petal = document.createElement("img");
+  petal.className = "global-book-petal";
+  petal.src = petalImages[Math.floor(Math.random() * petalImages.length)];
+
+  const startX = Math.random() * window.innerWidth;
+  const drift = gsap.utils.random(-200, 200);
+  const duration = gsap.utils.random(5, 9);
+
+  bookPetalsLayer.appendChild(petal);
+
+  gsap.set(petal, {
+    x: startX,
+    y: -40,
+    opacity: 1,
+    scale: gsap.utils.random(1.2, 2.2),
+    rotation: gsap.utils.random(-20, 20)
+  });
+
+  gsap.to(petal, {
+    y: window.innerHeight + 300,
+    x: startX + drift,
+    duration: duration,
+    ease: "none",
+    onComplete: () => petal.remove()
+  });
+
+  gsap.to(petal, {
+    x: `+=${gsap.utils.random(-60, 60)}`,
+    repeat: -1,
+    yoyo: true,
+    duration: gsap.utils.random(1, 2),
+    ease: "sine.inOut"
+  });
+}
+
+function startBookPetalRain() {
+  for (let i = 0; i < 40; i++) {
+    setTimeout(() => createBookPetal(), i * 60);
+  }
+}
+
+function playBookSakuraAnimation() {
+  if (!bookSakuraLeft || !bookSakuraRight) return;
+
+  gsap.killTweensOf([bookSakuraLeft, bookSakuraRight]);
+
+  gsap.set(bookSakuraLeft, {
+    x: 0,
+    opacity: 0,
+    rotate: -8
+  });
+
+  gsap.set(bookSakuraRight, {
+    x: 0,
+    opacity: 0,
+    rotate: 8
+  });
+
+  const tl = gsap.timeline();
+
+  tl.to(bookSakuraLeft, {
+    x: 380,
+    opacity: 1,
+    duration: 1,
+    ease: "power3.out"
+  });
+
+  tl.to(bookSakuraRight, {
+    x: -380,
+    opacity: 1,
+    duration: 1,
+    ease: "power3.out",
+    onStart: startBookPetalRain
+  }, "-=0.7");
+
+  tl.to({}, { duration: 1.2 }); // трошки побули на екрані
+
+  tl.to(bookSakuraLeft, {
+    x: 0,
+    opacity: 0,
+    duration: 0.8,
+    ease: "power2.inOut"
+  }, "-=0.2");
+
+  tl.to(bookSakuraRight, {
+    x: 0,
+    opacity: 0,
+    duration: 0.8,
+    ease: "power2.inOut"
+  }, "<");
+}
+
+function openBookPreviewSection() {
+  if (!bookPreviewSection) return;
+
+  bookPreviewSection.classList.add("active");
+
+  setTimeout(() => {
+    initFlipbook();
+    playBookSakuraAnimation();
+
+    bookPreviewSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }, 120);
+}
+
+if (openBookPreviewBtn) {
+  openBookPreviewBtn.addEventListener("click", openBookPreviewSection);
 }
