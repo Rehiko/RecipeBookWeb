@@ -187,7 +187,7 @@ body {
 
 .hero-text {
   position: absolute;
-  top: 48%;
+  top: 45%;
   left: 43%;
   transform: translate(-50%, -50%);
   width: min(92%, 980px);
@@ -674,13 +674,14 @@ body {
   cursor: pointer;
 }
 
+.split-card.active:hover {
+  background: rgba(179, 53, 53, 0.18);
+}
+
 .split-card:hover,
-.split-card.active {
-  transform: translateY(-6px);
-  border-color: rgba(181, 45, 47, 0.55);
-  background:
-    linear-gradient(180deg, rgba(181, 45, 47, 0.14), rgba(181, 45, 47, 0.05)),
-    var(--paper);
+.split-card.active:hover {
+
+  background: rgba(179, 53, 53, 0.12);
 }
 
 .split-label {
@@ -1773,20 +1774,20 @@ body {
 }
 
 .flipbook {
-    width: 1000px;
-    height: 600px;
-    margin-left: 19%;
+    width: 1200px;
+    height: 800px;
+    margin-left: 12%;
     margin-top: 5%;
 }
 .flipbook .hard img {
-    width: 80%;
+    width: 100%;
     border: none;
     background: none;
 }
 
 .flipbook img {
-    width: 500px;
-    height: 600px;
+    width: 600px;
+    height: 800px;
     border: none;
     background: none;
 }
@@ -2087,4 +2088,10 @@ body {
 
 .hero-link-btn:hover {
   transform: translateY(-2px);
+}
+
+
+.book-preview-inner {
+  min-height: 700px;
+  padding: 40px 20px 80px;
 }

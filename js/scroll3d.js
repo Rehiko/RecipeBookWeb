@@ -217,7 +217,7 @@ ScrollTrigger.create({
     });
 
     const tl = gsap.timeline();
-
+    
     tl.to(".ingredient-1", {
       x: window.innerWidth * 0.42,
       y: window.innerHeight * 0.42,
