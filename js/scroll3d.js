@@ -81,6 +81,7 @@ const ingredientOverlay = document.getElementById("ingredientOverlay");
 const ingredientEls = document.querySelectorAll(".ingredient");
 
 if (section3D && canvas) {
+ try {
   const renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: true,
@@ -153,8 +154,9 @@ if (section3D && canvas) {
   
 
   function resizeRenderer() {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    potGroup.scale.setScalar(Math.min(1, w / h / 1.1));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -287,6 +289,16 @@ ScrollTrigger.create({
     }, 1.15);
   }
 });
+ } catch (error) {
+   // Devices without WebGL must still support recipes, audio and navigation.
+   canvas.hidden = true;
+   section3D.classList.add('without-webgl');
+   const fallback = document.createElement('img');
+   fallback.src = 'images/borshchuk.png';
+   fallback.alt = 'Illustrated bowl of borscht';
+   fallback.className = 'object-fallback';
+   canvas.after(fallback);
+ }
 }
 /* =========================
    RECIPES PREVIEW SECTION
